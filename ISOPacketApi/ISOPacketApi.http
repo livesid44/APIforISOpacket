@@ -1,0 +1,35 @@
+@ISOPacketApi_HostAddress = http://localhost:5041
+
+### Build the predefined ISO 8583 MTI-1200 packet
+GET {{ISOPacketApi_HostAddress}}/api/ISOPacket/build
+Accept: application/json
+
+###
+
+### Build a custom ISO 8583 packet
+POST {{ISOPacketApi_HostAddress}}/api/ISOPacket/build
+Content-Type: application/json
+Accept: application/json
+
+{
+  "messageTypeIndicator": "1200",
+  "fields": {
+    "3":   "970000",
+    "4":   "0000000000000000",
+    "11":  "910017945323",
+    "12":  "20190410171832",
+    "17":  "20190410",
+    "24":  "200",
+    "32":  "012",
+    "34":  "17000000",
+    "41":  "00000000000000KO",
+    "43":  "0",
+    "49":  "INR",
+    "102": "012        0000    0000000000000000",
+    "123": "TLC",
+    "125": "CPPS-DATA",
+    "126": "31680100020711|000013|12-03-2026|50000000|31|BANK OF BARODA||Kshama Gupta||3168010002071100001312032026||||TLC|"
+  }
+}
+
+###
