@@ -1,4 +1,5 @@
 using ISOPacketApi.Middleware;
+using ISOPacketApi.Models;
 using ISOPacketApi.Services;
 using Microsoft.OpenApi.Models;
 
@@ -23,6 +24,12 @@ builder.Services.AddSwaggerGen(c =>
         c.IncludeXmlComments(xmlPath);
     }
 });
+
+// Bind the ISO connection settings from appsettings.json "IsoConnection" section.
+// Override per environment via appsettings.{Environment}.json or environment variables
+// prefixed with "IsoConnection__" (e.g. IsoConnection__Host=192.168.1.10).
+builder.Services.Configure<IsoConnectionSettings>(
+    builder.Configuration.GetSection(IsoConnectionSettings.SectionName));
 
 // Register the ISO 8583 packet service
 builder.Services.AddScoped<IIsoPacketService, IsoPacketService>();

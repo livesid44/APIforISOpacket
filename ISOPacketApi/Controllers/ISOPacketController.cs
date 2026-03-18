@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using ISOPacketApi.Models;
 using ISOPacketApi.Services;
 
@@ -9,10 +10,14 @@ namespace ISOPacketApi.Controllers;
 public class ISOPacketController : ControllerBase
 {
     private readonly IIsoPacketService _isoPacketService;
+    private readonly IsoConnectionSettings _connectionSettings;
 
-    public ISOPacketController(IIsoPacketService isoPacketService)
+    public ISOPacketController(
+        IIsoPacketService isoPacketService,
+        IOptions<IsoConnectionSettings> connectionSettings)
     {
         _isoPacketService = isoPacketService;
+        _connectionSettings = connectionSettings.Value;
     }
 
     /// <summary>
@@ -49,5 +54,20 @@ public class ISOPacketController : ControllerBase
 
         var response = _isoPacketService.BuildPacket(message);
         return Ok(response);
+    }
+
+    /// <summary>
+    /// Returns the active ISO system connection settings loaded from configuration.
+    /// Use this endpoint to verify that the correct host, port, and timeout values
+    /// are in effect for the running environment.
+    /// Edit these values in appsettings.json (or appsettings.{Environment}.json)
+    /// under the "IsoConnection" key, or supply them as environment variables
+    /// prefixed with "IsoConnection__" (e.g. IsoConnection__Host=192.168.1.10).
+    /// </summary>
+    [HttpGet("connection")]
+    [ProducesResponseType(typeof(IsoConnectionSettings), StatusCodes.Status200OK)]
+    public IActionResult GetConnectionSettings()
+    {
+        return Ok(_connectionSettings);
     }
 }
